@@ -81,7 +81,13 @@ async def get_dual_agent_responses(user_message: str) -> Tuple[str, str]:
                 "professional when necessary. Avoid diagnosing definitively."
             ),
         },
-        {"role": "user", "content": f"Patient said: {user_message}\nAgent1 summary: {agent1_reply}"},
+        {
+            "role": "user",
+            "content": (
+                f"Patient said: {user_message}\n"
+                f"Agent1 summary: {agent1_reply}"
+            ),
+        },
     ]
     agent2_reply = await _post_chat(agent2_messages, temperature=0.4)
 

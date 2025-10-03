@@ -27,25 +27,10 @@ class Settings(BaseModel):
         description="Application environment",
     )
 
-    # Database configuration
-    mysql_host: str = Field(
-        default=os.getenv("MYSQL_HOST", "localhost"),
-        description="MySQL host",
-    )
-    mysql_port: int = Field(
-        default=int(os.getenv("MYSQL_PORT", "3306")),
-        description="MySQL port",
-    )
-    mysql_user: str = Field(
-        default=os.getenv("MYSQL_USER", "root"),
-        description="MySQL username",
-    )
-    mysql_password: str = Field(
-        default=os.getenv("MYSQL_PASSWORD", ""),
-    )  # nosec - From env
-    mysql_db: str = Field(
-        default=os.getenv("MYSQL_DB", "healthcare_ai"),
-        description="MySQL database name",
+    # Database configuration (SQLite by default for local development)
+    database_url_env: str = Field(
+        default=os.getenv("DATABASE_URL", "sqlite:///./dev.db"),
+        description="SQLAlchemy database URL. Defaults to local SQLite file.",
     )
 
     # OpenAI API
@@ -62,12 +47,12 @@ class Settings(BaseModel):
 
     @property
     def database_url(self) -> str:
-        """Construct SQLAlchemy MySQL URL."""
-        # Using PyMySQL driver for compatibility in many environments
-        return (
-            f"mysql+pymysql://{self.mysql_user}:{self.mysql_password}"
-            f"@{self.mysql_host}:{self.mysql_port}/{self.mysql_db}"
-        )
+        """
+        Construct SQLAlchemy database URL.
+
+        Defaults to SQLite local file for development.
+        """
+        return self.database_url_env
 
     @property
     def cors_origins_list(self) -> list[str]:
