@@ -13,15 +13,27 @@ router = APIRouter(prefix="/patients", tags=["Patients"])
 
 
 # PUBLIC_INTERFACE
-@router.get("", response_model=List[PatientOut], summary="List patients", description="Get all patients.")
+@router.get(
+    "",
+    response_model=List[PatientOut],
+    summary="List patients",
+    description="Get all patients.",
+)
 def list_patients(db: Session = Depends(get_db_session)):
     """List all patients."""
     return db.query(models.Patient).order_by(models.Patient.created_at.desc()).all()
 
 
 # PUBLIC_INTERFACE
-@router.post("", response_model=PatientOut, summary="Create or update patient", description="Create or update a patient record by optional ID.")
-def upsert_patient(payload: PatientCreate, db: Session = Depends(get_db_session)):
+@router.post(
+    "",
+    response_model=PatientOut,
+    summary="Create or update patient",
+    description="Create or update a patient record by optional ID.",
+)
+def upsert_patient(
+    payload: PatientCreate, db: Session = Depends(get_db_session)
+):
     """Create a new patient or update an existing one if id is provided."""
     if payload.id:
         patient = db.query(models.Patient).filter(models.Patient.id == payload.id).first()
@@ -43,16 +55,24 @@ def upsert_patient(payload: PatientCreate, db: Session = Depends(get_db_session)
 
 
 # PUBLIC_INTERFACE
-@router.get("/{patient_id}/history", response_model=List[ChatThreadOut], summary="Get patient chat history", description="Get all chat threads with messages for a patient.")
+@router.get(
+    "/{patient_id}/history",
+    response_model=List[ChatThreadOut],
+    summary="Get patient chat history",
+    description="Get all chat threads with messages for a patient.",
+)
 def get_history(patient_id: int, db: Session = Depends(get_db_session)):
     """Retrieve all chat threads and messages for a given patient."""
     patient = db.query(models.Patient).filter(models.Patient.id == patient_id).first()
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
 
-    threads = db.query(models.ChatThread).filter(models.ChatThread.patient_id == patient_id).order_by(
-        models.ChatThread.updated_at.desc()
-    ).all()
+    threads = (
+        db.query(models.ChatThread)
+        .filter(models.ChatThread.patient_id == patient_id)
+        .order_by(models.ChatThread.updated_at.desc())
+        .all()
+    )
 
     # Eagerly load messages per thread
     for t in threads:

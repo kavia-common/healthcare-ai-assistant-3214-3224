@@ -13,19 +13,46 @@ load_dotenv()
 
 class Settings(BaseModel):
     """Application settings loaded from environment variables."""
-    app_name: str = Field(default="Healthcare AI Assistant Backend", description="Name of the FastAPI application")
-    app_version: str = Field(default="1.0.0", description="Version of the FastAPI application")
-    environment: str = Field(default=os.getenv("ENVIRONMENT", "development"), description="Application environment")
+
+    app_name: str = Field(
+        default="Healthcare AI Assistant Backend",
+        description="Name of the FastAPI application",
+    )
+    app_version: str = Field(
+        default="1.0.0",
+        description="Version of the FastAPI application",
+    )
+    environment: str = Field(
+        default=os.getenv("ENVIRONMENT", "development"),
+        description="Application environment",
+    )
 
     # Database configuration
-    mysql_host: str = Field(default=os.getenv("MYSQL_HOST", "localhost"), description="MySQL host")
-    mysql_port: int = Field(default=int(os.getenv("MYSQL_PORT", "3306")), description="MySQL port")
-    mysql_user: str = Field(default=os.getenv("MYSQL_USER", "root"), description="MySQL username")
-    mysql_password: str = Field(default=os.getenv("MYSQL_PASSWORD", "")),  # nosec - From env
-    mysql_db: str = Field(default=os.getenv("MYSQL_DB", "healthcare_ai"), description="MySQL database name")
+    mysql_host: str = Field(
+        default=os.getenv("MYSQL_HOST", "localhost"),
+        description="MySQL host",
+    )
+    mysql_port: int = Field(
+        default=int(os.getenv("MYSQL_PORT", "3306")),
+        description="MySQL port",
+    )
+    mysql_user: str = Field(
+        default=os.getenv("MYSQL_USER", "root"),
+        description="MySQL username",
+    )
+    mysql_password: str = Field(
+        default=os.getenv("MYSQL_PASSWORD", ""),
+    )  # nosec - From env
+    mysql_db: str = Field(
+        default=os.getenv("MYSQL_DB", "healthcare_ai"),
+        description="MySQL database name",
+    )
 
     # OpenAI API
-    openai_api_key: str = Field(default=os.getenv("OPENAI_API_KEY", ""), description="OpenAI API key")
+    openai_api_key: str = Field(
+        default=os.getenv("OPENAI_API_KEY", ""),
+        description="OpenAI API key",
+    )
 
     # Frontend CORS
     cors_allow_origins: str = Field(

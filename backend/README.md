@@ -17,3 +17,6 @@ Run locally:
 OpenAPI spec:
 - Visit /docs
 - Generate file: `python -m src.api.generate_openapi`
+
+Development notes:
+- Flake8 is configured via `.flake8` to exclude the local virtual environment (`.venv`) and vendor packages from linting. If you see linter errors coming from site-packages, ensure you run flake8 from the `backend/` directory so exclusion patterns apply.

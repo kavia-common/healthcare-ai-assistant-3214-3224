@@ -28,7 +28,12 @@ def _ensure_thread_for_patient(db: Session, patient_id: int) -> models.ChatThrea
 
 
 # PUBLIC_INTERFACE
-@router.post("/send", response_model=SendChatResponse, summary="Send chat message", description="Send a user message and receive responses from Agent 1 and Agent 2.")
+@router.post(
+    "/send",
+    response_model=SendChatResponse,
+    summary="Send chat message",
+    description="Send a user message and receive responses from Agent 1 and Agent 2.",
+)
 async def send_chat(payload: SendChatRequest, db: Session = Depends(get_db_session)):
     """Store user message, get AI responses from two agents, store them and return all."""
     patient = db.query(models.Patient).filter(models.Patient.id == payload.patientId).first()

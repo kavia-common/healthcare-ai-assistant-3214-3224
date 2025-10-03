@@ -21,7 +21,11 @@ def _headers():
     }
 
 
-async def _post_chat(messages, model: str = "gpt-4o-mini", temperature: float = 0.2) -> str:
+async def _post_chat(
+    messages,
+    model: str = "gpt-4o-mini",
+    temperature: float = 0.2,
+) -> str:
     """
     Call OpenAI Chat Completions API and return the assistant message content.
     If OPENAI_API_KEY is not set, return a deterministic mock response.
@@ -29,7 +33,9 @@ async def _post_chat(messages, model: str = "gpt-4o-mini", temperature: float = 
     headers = _headers()
     if not headers:
         # Mock response for local dev without key
-        prompt = " ".join([m.get("content", "") for m in messages if m.get("role") == "user"])
+        prompt = " ".join(
+            [m.get("content", "") for m in messages if m.get("role") == "user"]
+        )
         return f"[MOCK AI] Based on your input: {prompt[:100]}..."
 
     payload = {
@@ -41,7 +47,10 @@ async def _post_chat(messages, model: str = "gpt-4o-mini", temperature: float = 
         resp = await client.post(OPENAI_API_URL, headers=headers, json=payload)
         resp.raise_for_status()
         data = resp.json()
-        content = data["choices"][0]["message"]["content"]
+        # Extract assistant message content with readable wrapping
+        choice = data["choices"][0]
+        msg = choice["message"]
+        content = msg["content"]
         return content
 
 

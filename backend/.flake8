@@ -1,7 +1,23 @@
 [flake8]
-exclude = .git,__pycache__,build,dist,venv
-select = E9,F
-max-line-length = 120
+max-line-length = 100
+extend-ignore =
+    # Allow line break before binary operator (old style) and other style nits
+    W503
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    env,
+    build,
+    dist,
+    .mypy_cache,
+    .pytest_cache,
+    .idea,
+    .vscode,
+    interfaces,
+    */site-packages/*
+
 per-file-ignores =
-    __init__.py:F401
-max-complexity = 18
+    # Allow __init__ modules to have unused imports re-exported
+    */__init__.py:F401
