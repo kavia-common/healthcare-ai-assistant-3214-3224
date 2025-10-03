@@ -13,6 +13,10 @@ Database (local development):
 Environment configuration uses .env.
 See `.env.example` for required variables.
 
+CORS:
+- The backend explicitly allows the frontend origin `https://vscode-internal-24827-beta.beta01.cloud.kavia.ai:4000`.
+- You can also set `CORS_ALLOW_ORIGINS` (comma-separated) to add/override allowed origins as needed.
+
 Run locally:
 - python -m venv .venv && source .venv/bin/activate
 - pip install -r requirements.txt

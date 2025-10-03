@@ -42,7 +42,10 @@ class Settings(BaseModel):
     # Frontend CORS
     cors_allow_origins: str = Field(
         default=os.getenv("CORS_ALLOW_ORIGINS", "*"),
-        description="Comma separated list of origins allowed for CORS",
+        description=(
+            "Comma separated list of origins allowed for CORS. "
+            "The app also ensures the cloud preview frontend origin is allowed by default."
+        ),
     )
 
     @property

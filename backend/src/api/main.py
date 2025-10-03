@@ -29,10 +29,19 @@ app = FastAPI(
     openapi_tags=openapi_tags,
 )
 
-# CORS configuration based on env
+# CORS configuration: explicitly allow the cloud preview frontend origin.
+# Even if environment variable CORS_ALLOW_ORIGINS exists, we ensure the specific
+# frontend origin is included to avoid CORS issues in preview.
+frontend_origin = "https://vscode-internal-24827-beta.beta01.cloud.kavia.ai:4000"
+origins = set(settings.cors_origins_list or [])
+# If wildcard is present, we still add explicit origin for stricter environments.
+origins.add(frontend_origin)
+# Convert to list, preserving deterministic order for reproducibility
+allow_origins_list = sorted(list(origins)) if origins else [frontend_origin]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list or ["*"],
+    allow_origins=allow_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
