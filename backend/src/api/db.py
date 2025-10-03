@@ -13,13 +13,15 @@ settings = get_settings()
 is_sqlite = settings.database_url.startswith("sqlite")
 
 # Create SQLAlchemy engine
+# Note:
+# - For SQLite, do not pass MySQL-specific pool args like pool_recycle.
+# - pool_pre_ping is not necessary for SQLite; omit to avoid unnecessary overhead.
+# - check_same_thread must be False for SQLite when used across threads
+#   (e.g., with FastAPI/uvicorn reload).
 engine = create_engine(
     settings.database_url,
     echo=False,
-    # For SQLite, `check_same_thread` must be False when using the connection across threads
     connect_args={"check_same_thread": False} if is_sqlite else {},
-    pool_pre_ping=not is_sqlite,
-    pool_recycle=3600 if not is_sqlite else None,
 )
 
 # Session factory
